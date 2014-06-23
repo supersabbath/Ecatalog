@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Ecatalog</string>
+    <string name="dummy_button">Clean Image</string>
+    <string name="dummy_content">E-CATALOG</string>
+    <string name="product_imgv_descrip">Container for the product image</string>
+    <string name="cam_tool_description">Camara Toolbar relative layout</string>
+    <string name="camera_img_relativelayout">Camera relative layout</string>
+    <string name="take_but_description">image view button camera</string>
+    <string name="camera_error">Imposible to open camera</string>
+    <string name="file">file</string>
+    <string name="create_new">create new</string>
+    <string name="open">open</string>
+ 	<string name="yes">Yes</string>
+    <string name="no">No</string>
+</resources>
