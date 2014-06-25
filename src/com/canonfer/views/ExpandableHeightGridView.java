@@ -5,7 +5,12 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.View.MeasureSpec;
 import android.widget.GridView;
- 
+ /**
+  * This class extends GridView adding new behaviors to its super class.
+  * ExpandableHeightGridView class allows resizing on the heigth of the view according to the number of elements
+  * @author fernandocanon
+  *
+  */
 public class ExpandableHeightGridView extends GridView
 {
 
@@ -31,7 +36,9 @@ public class ExpandableHeightGridView extends GridView
     {
         return expanded;
     }
-
+/**
+ * Exploids an Android hack to allows the view height's growth
+ */
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
@@ -52,7 +59,10 @@ public class ExpandableHeightGridView extends GridView
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
-
+/**
+ * Setter method for informing the veiw if expansion is allowed
+ * @param expanded
+ */
     public void setExpanded(boolean expanded)
     {
         this.expanded = expanded;

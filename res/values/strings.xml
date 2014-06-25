@@ -11,7 +11,7 @@
     <string name="camera_error">Imposible to open camera</string>
     <string name="file">file</string>
     <string name="create_new">create new</string>
-    <string name="open">open</string>
+    <string name="edit">Edit</string>
  	<string name="yes">Yes</string>
     <string name="no">No</string>
 </resources>

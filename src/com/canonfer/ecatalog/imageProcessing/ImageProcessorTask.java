@@ -23,7 +23,12 @@ import org.opencv.core.Scalar;
 import org.opencv.android.Utils;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.gpu.*; 
-
+/**
+ * ImageProcesor is a AsyncTask that removes the background of an image
+ * 
+ * @author fernandocanon
+ *
+ */
 
 public class ImageProcessorTask extends AsyncTask<Bitmap, Integer,Bitmap> {
 
@@ -49,7 +54,6 @@ public class ImageProcessorTask extends AsyncTask<Bitmap, Integer,Bitmap> {
 		Log.i(TAG, "Bytes :"+result.getByteCount());
 		 
 	}
-
 
 	
 	public  Bitmap maskImage (Bitmap src){

@@ -12,8 +12,9 @@ import android.util.Log;
 import android.widget.ImageView;
 	
 /**
- * Image downloading will be performed with this Class
- *  
+ * Image downloading taks will be performed in this Class
+ * This class performs a background download of the image. The main thread will not block.
+ * Once the download is finish the OnPostExecute method will callback the origin thread
  * */
 public class  DownloadImageTask extends AsyncTask<String, Void, Bitmap>{
 	public final String LogTag="Ecatalog";
@@ -24,7 +25,9 @@ public class  DownloadImageTask extends AsyncTask<String, Void, Bitmap>{
 	      this.bmImage = bmImage;
 	      this.mDB = ddBB;
 	  }
-
+/**
+ * Download the images using the url stored in the database. Receives the image ID to perform the sql query  
+ */
 	  protected Bitmap doInBackground(String... imagesIDs) {
 	      String idInDataBase = imagesIDs[0];
 	      StoredImage imgSt= mDB.getStoredImage(Integer.parseInt(idInDataBase));
@@ -47,7 +50,9 @@ public class  DownloadImageTask extends AsyncTask<String, Void, Bitmap>{
 	      
 	      return mIcon11;
 	  }
-
+/**
+ * This method acts like a callback when task is completed
+ */
 	  protected void onPostExecute(Bitmap result) {
  	      bmImage.setImageBitmap(result);
 	      bmImage.postInvalidate();

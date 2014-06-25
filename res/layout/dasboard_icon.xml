@@ -9,9 +9,15 @@
        android:layout_width="fill_parent"
        android:layout_height="96.0dip"
        android:scaleType="fitCenter" 
-       
-       />
- 
+    />
+     <com.canonfer.views.CustomImageButton
+    android:id="@+id/editButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/trash"
+    android:onClick="deleteItem"
+    android:visibility="invisible"
+   	/>
     <TextView
        android:id="@+id/dashboard_icon_text"
        android:layout_width="fill_parent"

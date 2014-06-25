@@ -56,26 +56,27 @@ containing a value of this type.
         public static final int icon_camera=0x7f020005;
         public static final int icon_camera_select=0x7f020006;
         public static final int toolbar_camara_portrait=0x7f020007;
-        public static final int watch=0x7f020008;
-        public static final int yoda=0x7f020009;
+        public static final int trash=0x7f020008;
+        public static final int watch=0x7f020009;
+        public static final int yoda=0x7f02000a;
     }
     public static final class id {
         public static final int any=0x7f040000;
         public static final int back=0x7f040001;
         public static final int cameraImageLayout=0x7f040009;
         public static final int cameraProgressBar=0x7f040010;
-        public static final int create_new=0x7f040019;
-        public static final int dashboard_grid=0x7f040018;
+        public static final int dashboard_grid=0x7f040019;
         public static final int dashboard_icon_img=0x7f040015;
-        public static final int dashboard_icon_text=0x7f040016;
+        public static final int dashboard_icon_text=0x7f040017;
         public static final int dummy_button=0x7f040007;
+        public static final int editButton=0x7f040016;
         public static final int flipCameraBtn=0x7f04000f;
         public static final int front=0x7f040002;
         public static final int fullscreen_content=0x7f040004;
         public static final int fullscreen_content_controls=0x7f040006;
         public static final int gallery1=0x7f040008;
         public static final int galleryProgressBar=0x7f040013;
-        public static final int grid_scroll=0x7f040017;
+        public static final int grid_scroll=0x7f040018;
         public static final int grid_view=0x7f040003;
         public static final int imageView1=0x7f040005;
         public static final int open=0x7f04001a;
@@ -105,9 +106,9 @@ containing a value of this type.
         public static final int create_new=0x7f060009;
         public static final int dummy_button=0x7f060001;
         public static final int dummy_content=0x7f060002;
+        public static final int edit=0x7f06000a;
         public static final int file=0x7f060008;
         public static final int no=0x7f06000c;
-        public static final int open=0x7f06000a;
         public static final int product_imgv_descrip=0x7f060003;
         public static final int take_but_description=0x7f060006;
         public static final int yes=0x7f06000b;

@@ -92,12 +92,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		      return true;
 		   }
 
-		   public Integer deleteItem(StoredImage imgSt )
+		   public Integer deleteItem(int itemId)
 		   {
 		      SQLiteDatabase db = this.getWritableDatabase();
 		      return db.delete(IMAGES_TABLE_NAME, 
 		      "id = ? ", 
-		      new String[] { Integer.toString(imgSt._id) });
+		      new String[] { Integer.toString(itemId) });
 		   }
 		   
 		   public ArrayList <StoredImage> getAllStoredImages()

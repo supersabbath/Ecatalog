@@ -2,15 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:Ecatalog="http://schemas.android.com/apk/res-auto"
      >
-
-    <item
-        android:id="@+id/create_new"
-        android:title="@string/create_new"
-        android:showAsAction="ifRoom"/>
-      />
-
     <item
         android:id="@+id/open"
-        android:title="@string/open"
+        android:title="@string/edit"
  		android:showAsAction="ifRoom"/>
 </menu>

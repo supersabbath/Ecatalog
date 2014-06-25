@@ -22,8 +22,9 @@ import android.os.Build;
 import android.content.ContentResolver;
 /**
  * This class implements the listener for ClipboardManager It stores the last 10
- * images copied to the clipboard
- * 
+ * images copied to the clipboard Implements ClipboardManager.OnPrimaryClipChangedListener
+ * The copied data will store if it is a url for an image. Or if it responds to the mime type /image
+ * When new valid data is added to the database it will display a Notification to the user in the toolbar
  * */
 @SuppressLint("NewApi")
 public class ClipboardListener implements
@@ -32,17 +33,21 @@ public class ClipboardListener implements
 	public final String LogTag = "Ecatalog";
 	private DBHelper mDataBase;
 	private Context mContext;
-
+/**
+ * Basic constructor
+ * @param context The Activity's context.
+ */
 	public ClipboardListener(Context context) {
 
 		mContext = context;
 		mDataBase = new DBHelper(mContext);
 	}
-
+/**
+ * Call when a copy and past acction is received in the manager
+ */
 	@Override
 	public void onPrimaryClipChanged() {
-		// Gets a handle to the clipboard service.
-
+		// Gets a handle to the clipboard service
 		ClipboardManager clipboard = (ClipboardManager) mContext
 				.getSystemService(Context.CLIPBOARD_SERVICE);
 		Log.i(LogTag, "new object");
@@ -51,18 +56,16 @@ public class ClipboardListener implements
 		
 	}
 
-	
-	
+	/**
+	 * Process the received information
+	 * @param cp Data copied by the user
+	 */
 	public void processReceivedClipData(ClipData cp) {
 		
 		ClipData.Item item = cp.getItemAt(0);
 	
 		if (this.validateText(item)){ // it is text
-			
-	/*		Uri pasteUri = item.getUri();
-			ContentResolver cr = mContext.getContentResolver();
-			String uriMimeType = cr.getType(pasteUri);*/
-			//TODO: check type
+		
 			byte imageInByte[]=null;
 			StoredImage img = new StoredImage(0,item.getText().toString(),imageInByte);
 			mDataBase.insertImage(img);
@@ -74,6 +77,9 @@ public class ClipboardListener implements
 	
 	@SuppressLint("NewApi")
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	/**
+	 * Presents a
+	 */
 	public void pushNotification(){
 		
 		NotificationCompat.Builder mBuilder =

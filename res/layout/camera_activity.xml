@@ -10,14 +10,17 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@android:color/black"
-        android:contentDescription="@string/camera_img_relativelayout" >
+        android:contentDescription="@string/camera_img_relativelayout"
+        android:layout_marginTop="15dp" 
+           >
 
         <FrameLayout
             android:id="@+id/surface_camera"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+          />
 
         <ImageView
             android:id="@+id/productImageView"
@@ -35,7 +38,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:progress="20"
+        android:progress="100"
         android:secondaryProgress="20" />
     <RelativeLayout
         android:id="@+id/toolbar"

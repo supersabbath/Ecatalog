@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import com.canonfer.ecatalog.R;
 import com.canonfer.ecatalog.imageProcessing.AsyncResponse;
@@ -81,23 +82,28 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
-
 /**
- * Based on:
- * 
- * @author Fernando Canon
+ * This activity manages the camera , the preview of the picture and the required images processing
  */
-@SuppressLint("NewApi")
+//@SuppressLint("NewApi")
 public class CameraActivity extends Activity {
 
 	private static final String TAG = "CameraActivity";
 	/**
-	 * 
-	 * mPreviewRunning controls the changes on the surface
+	 * mCamera camera object
 	 */
-	Camera mCamera;
-	boolean mPreviewRunning = false;
-	boolean isFrontCamera = false;
+	public Camera mCamera;
+	/**
+	 * mPreviewRunning controls the changes on the surface
+	 **/
+	private boolean mPreviewRunning = false;
+	/**
+	 * isFrontCamera indicates which camera is in used. Back camera / front Camera
+	 **/
+	public boolean isFrontCamera = false;
+	/**
+	 * mContext context for CameraActivity
+	 */
 	private Context mContext = this;
 	private android.widget.RelativeLayout.LayoutParams layoutParams;
 	/**
@@ -105,7 +111,7 @@ public class CameraActivity extends Activity {
 	 */
 	private RelativeLayout cameraImageLayout;
 	/**
-	 * Camera surface
+	 * Camera surface holder
 	 */
 		private CameraPreview mPreview;
 		private FrameLayout mPreviewFrame;
@@ -117,114 +123,61 @@ public class CameraActivity extends Activity {
 	 * Product Image View
 	 */
 	private ImageView productImageview;
-	/**
-	 * Camera's button
+	/*
+	 * Camera's button for taking the picture
 	 */
 	private ImageButton takePictureButton;
 
-	private File pictureFile = null;
-	private ScaleGestureDetector SGD;
-	private TranslateAnimation TAnimator;
+	private File pictureFile = null; 
+	/**
+	 * mToolbarLayout bar displayed under the photo preview
+	 */
 	private RelativeLayout mToolbarLayout;
+	/**
+	 * mSpinner circular progress view displayed while taking the photo.
+	 */
 	private ProgressBar mSpinner;
+	/**
+	 *  mSizerBar controls the size of the image (product) displayed over the camera
+	 */
 	private SeekBar mSizerBar;
+	
+	/*
+	 * scaleFactor stores the value that will scale the images according to the mSizerBar
+	 */
 	float scaleFactor;
 	
 	public void onCreate(Bundle icicle) {
 
 		super.onCreate(icicle);
-		Log.e(TAG, "onCreate");
-		
 		scaleFactor=1;
+		
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.camera_activity);
+		
 		mToolbarLayout=(RelativeLayout) findViewById(R.id.toolbar);
 		cameraImageLayout = (RelativeLayout) findViewById(R.id.cameraImageLayout);
-	//	cameraImageLayout.setOnDragListener(new myDragEventListener());
 		takePictureButton = (ImageButton) findViewById(R.id.takePictureButton);
-		
-		 
-		takePictureButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {// Click to make the photo
-				findViewById(R.id.cameraProgressBar).setVisibility(View.VISIBLE);
-				findViewById(R.id.galleryProgressBar).setVisibility(View.VISIBLE);
-				mCamera.takePicture(null, null, mPictureCallback);
-
-			}
-		});
 		productImageview = (ImageView) findViewById(R.id.productImageView);
-	
-		
 		resultImageView = (ImageView) findViewById(R.id.resultImageView);
-		
-		if (getIntent().hasExtra("byteArray")) {
-
-			Bitmap b = BitmapFactory.decodeByteArray(getIntent()
-					.getByteArrayExtra("byteArray"), 0, getIntent()
-					.getByteArrayExtra("byteArray").length);
-			productImageview.setImageBitmap(b);
-
-			productImageview.setVisibility(View.VISIBLE);
-	//		SGD = new ScaleGestureDetector(this, new ScaleListener());
-
-		}
-		mSizerBar= (SeekBar)findViewById(R.id.seek1);
-		mSizerBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			 
-			
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                scaleFactor = progress;
-                scaleFactor /=100;
-                
-                float w =productImageview.getHeight() * scaleFactor;
-                float h = productImageview.getWidth() * scaleFactor;
-                Log.i(TAG, "value: " + progress);
-        
-            /*    ScaleAnimation animation = new ScaleAnimation(scaleFactor, scaleFactor, scaleFactor,
-                		scaleFactor, Animation.RELATIVE_TO_SELF, 0.5f,
-    					Animation.RELATIVE_TO_SELF, 0.5f);
-    			animation.setFillAfter(true);
-    			*/
-    			ObjectAnimator animX = ObjectAnimator.ofFloat(productImageview, "scaleX", scaleFactor);
-    			ObjectAnimator animY = ObjectAnimator.ofFloat(productImageview, "scaleY", scaleFactor);
-    			AnimatorSet animSetXY = new AnimatorSet();
-    			animSetXY.playTogether(animX, animY);
-    			animSetXY.start();
-    		//	productImageview.startAnimation(animation);
-    			
-    			
-                }
- 
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
- 
-            public void onStopTrackingTouch(SeekBar seekBar) {
-   /*         	ObjectAnimator animX = ObjectAnimator.ofFloat(productImageview, "scaleX", scaleFactor);
-    			ObjectAnimator animY = ObjectAnimator.ofFloat(productImageview, "scaleY", scaleFactor);
-    			AnimatorSet animSetXY = new AnimatorSet();
-    			animSetXY.playTogether(animX, animY);
-    			animSetXY.start(); */
-            }
-        });
-		
-		 final Button button = (Button) findViewById(R.id.flipCameraBtn);
-         button.setOnClickListener(new View.OnClickListener() {
-             public void onClick(View v) {
-                 flipCamera();
-             }
-         });
-/*		
-		productImageview.setOnDragListener(new myDragEventListener());
-*/
+		configureTakePictureButton();
+		putIntentExtraInProductView();
+		configureSeekBar();
+     	configureFlipCameraButton();
 		mCamera = getCameraInstance();
 		// Create our Preview view and set it as the content of our activity.
 		mPreview = new CameraPreview(this, mCamera);
 		mPreviewFrame = (FrameLayout) findViewById(R.id.surface_camera);
-
+		addViewTreeObserverToCameraSurface();
+	}
+	/**
+	 *  Method for configuring the camera preview to the appropiated size. The appropiated size
+	 *  is given by the aspect ratio of the final photo. (3/4=0.75) . To do so, it has to wait until
+	 *  the layouts are rendered.
+	 */
+	private void addViewTreeObserverToCameraSurface() {
 		ViewTreeObserver viewTreeObserver = mPreviewFrame.getViewTreeObserver();
 		if (viewTreeObserver.isAlive()) {
 		  viewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
@@ -239,6 +192,75 @@ public class CameraActivity extends Activity {
 		    }
 		  });
 		}
+	}
+	
+	/**
+	 *  This method Setups the onClick listener in the flip button 
+	 */
+	private void configureFlipCameraButton() {
+		final Button button = (Button) findViewById(R.id.flipCameraBtn);
+         button.setOnClickListener(new View.OnClickListener() {
+             public void onClick(View v) {
+                 flipCamera();
+             }
+         });
+	}
+
+	/**
+	 * This method takes the extra value from the previous activity's intent and render it in productImageView 
+	 */
+	private void putIntentExtraInProductView() {
+		if (getIntent().hasExtra("byteArray")) {
+			Bitmap b = BitmapFactory.decodeByteArray(getIntent()
+					.getByteArrayExtra("byteArray"), 0, getIntent()
+					.getByteArrayExtra("byteArray").length);
+			productImageview.setImageBitmap(b);
+			productImageview.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	/**
+	 * This method adds the listener to the camara click button. 
+	 */
+	private void configureTakePictureButton() {
+		takePictureButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {// Click to make the photo
+				findViewById(R.id.cameraProgressBar).setVisibility(View.VISIBLE);
+				findViewById(R.id.galleryProgressBar).setVisibility(View.VISIBLE);
+				mCamera.takePicture(null, null, mPictureCallback);
+
+			}
+		});
+	}
+	/**
+     *  ConfigureSeekBar add a listener to the resource from the xml (R.id.seek1) file
+     *	In the listener the value for scaling the product image is computed as well as the animation performed 
+     */
+	private void configureSeekBar() {
+		mSizerBar= (SeekBar)findViewById(R.id.seek1);
+		mSizerBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {	 
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                scaleFactor = progress;
+                scaleFactor /=100;
+                scaleFactor = (float) Math.max(0.2, scaleFactor);
+                float w =productImageview.getHeight() * scaleFactor;
+                float h = productImageview.getWidth() * scaleFactor;
+    			ObjectAnimator animX = ObjectAnimator.ofFloat(productImageview, "scaleX", scaleFactor);
+    			ObjectAnimator animY = ObjectAnimator.ofFloat(productImageview, "scaleY", scaleFactor);
+    			AnimatorSet animSetXY = new AnimatorSet();
+    			animSetXY.playTogether(animX, animY);
+    			animSetXY.start();
+    	 
+                }
+             @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+             @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+        	 
+            }
+        });
 	}
 	
 
@@ -257,33 +279,37 @@ public class CameraActivity extends Activity {
        // releaseCamera();              // release the camera immediately on pause event
     }
 
+
+	/**
+	 *  this method set the size of the view  using the Relative layout parameters
+	 *  The container of the view must be instace of RelativeLayout
+	 *  @param v view to be resize
+	 *  @param width new width value
+	 *  @param height new height value
+	 * */
+	public static void setWidthHeight(FrameLayout v, int width, int height){
+		android.widget.RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
+	    v.setLayoutParams(lp);
+	}
+	
+	/**
+	 * PictureCallback overrides the behavior of the camera when the photo has been taken.
+	 */
+	Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+		public void onPictureTaken(byte[] imageData, Camera c) {
+
+			if (imageData != null) {
+				mCamera.stopPreview();
+				processByteImage(mContext, imageData, 90);
+			}
+		}
+	};
     private void releaseCamera(){
         if (mCamera != null){
             mCamera.release();        // release the camera for other applications
             mCamera = null;
         }
     }
-	/**
-	 * Call At init when resizing the camera surface
-	 * */
-	public static void setWidthHeight(FrameLayout v, int width, int height){
-		android.widget.RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
- 
-	    v.setLayoutParams(lp);
-	}
-	
-
-
-	Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
-		public void onPictureTaken(byte[] imageData, Camera c) {
-
-			if (imageData != null) {
-				mCamera.stopPreview();
-				StoreByteImage(mContext, imageData, 90);
-			}
-		}
-	};
-	
 	  private int findFrontFacingCamera() {
 		    int cameraId = -1;
 		    // Search for the front facing camera
@@ -300,40 +326,71 @@ public class CameraActivity extends Activity {
 		    return cameraId;
 		 }
 	  
- 
+	  	/**
+	     * Method that flips the camera to the opposite position
+	     * 
+	     */
+	private void flipCamera() {
+
+		if (mCamera != null) {
+			System.out.println("flipcamera");
+			mCamera.stopPreview();
+			mCamera.release();
+			mCamera = null;
+		}
+
+		try {
+			if (isFrontCamera) {
+
+				this.presentBackCamera();
+
+			} else {
+				this.presentFrontCamera();
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+    /**
+     * This method presents the back camera
+     * 
+     * @throws IOException in case the preview holder fails
+     */
+	  private void presentBackCamera () throws IOException {
+		  
+	    	mCamera = getCameraInstance();
+        	mCamera.setPreviewDisplay(mPreview.getHolder());
+        	Parameters params = this.configureCamera();
+        	mCamera.setParameters(params); 
+        	mCamera.startPreview();
+        	isFrontCamera = false;
+		  
+	  }
+	    /**
+	     * This method presents the front camera
+	     * 
+	     * @throws IOException in case the preview holder fails
+	     */
 	  
-	  private void flipCamera() {
-
-	        if (mCamera != null)
-	        {
-	            System.out.println("flipcamera");
-	            mCamera.stopPreview();
-	            mCamera.release();
-	            mCamera = null;
-	            isFrontCamera = false;
-
-	        }
-	        mCamera = Camera.open(findFrontFacingCamera());
-	        if (mCamera != null) {
-	            try {
-	   	
+	  private void presentFrontCamera () throws IOException {
+		  mCamera = Camera.open(findFrontFacingCamera());
+		  if (mCamera != null) {
+	         
 	            	mCamera.setPreviewDisplay(mPreview.getHolder());
 	            	Parameters params = this.configureCamera();
 	            	params.setRotation(270);
 	            	mCamera.setParameters(params); 
 	            	mCamera.startPreview();
-	            	isFrontCamera = true;
-	            	 
-	            } catch (IOException e) {
-	                // TODO Auto-generated catch block
-	                e.printStackTrace();
-	            }
-	        }
-
-	   }
+	            	isFrontCamera = true; 
+	            } 
+	  }
 	  
-	  public void flipImage(){
-		  
+	  /**
+	   *  This methos flips the bitmap in productImageView inverting the matrix in x coordinates
+	   * */
+	  public void flipImage(){  
 		  BitmapDrawable drawable =(BitmapDrawable) productImageview.getDrawable();
 		  Bitmap productBitmap = drawable.getBitmap().copy(Bitmap.Config.ARGB_8888,true);
 		  Matrix matrix = new Matrix();
@@ -342,100 +399,37 @@ public class CameraActivity extends Activity {
 		  productBitmap.recycle();
 	  }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent ev) 
-	{
-		Log.i("SV", "event");
-		return true;
-	}
+
 	
-	
-	private class ScaleListener extends
-			ScaleGestureDetector.SimpleOnScaleGestureListener {
-
-		private Matrix matrix = new Matrix();
-		private float scale = 1f;
-
-		@Override
-		public boolean onScale(ScaleGestureDetector detector) {
-			scale *= detector.getScaleFactor();
-			scale = Math.max(0.1f, Math.min(scale, 5.0f));
-			/*
-			 * matrix.setScale(scale, scale); ObjectAnimator anim =
-			 * ObjectAnimator.ofFloat(productImageview, "height", 0f, 1f);
-			 * anim.setDuration(1000); anim.start();
-			 */
-			ScaleAnimation animation = new ScaleAnimation(scale, scale, scale,
-					scale, Animation.RELATIVE_TO_SELF, 1f,
-					Animation.RELATIVE_TO_SELF, 1f);
-			animation.setFillAfter(true);
-			productImageview.startAnimation(animation);
-			Log.i("SV", "Scale" + scale);
-			/*
-			 * productImageview.setImageMatrix(matrix);
-			 * productImageview.invalidate(); Log.i("SV", "Scale"+scale);
-			 */
-			return true;
-		}
-	}
-
-	/**
-	 * 
-	 * 	
-	 **/
-	
-	public boolean StoreByteImage(Context mContext, byte[] imageData,
-			int quality) {
-	
-	
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		// avoid outofmemoryexception
-		options.inTempStorage = new byte[16 * 1024];
-		//TODO: check this out
-		Bitmap resultBitmap = BitmapFactory.decodeByteArray(imageData, 0,
-				imageData.length, options);
-	 
-		resultBitmap = resultBitmap.copy(Bitmap.Config.ARGB_8888, true);
-
-		 Log.d(TAG, "ResultBitmap w:" + resultBitmap.getWidth()+" h:" +resultBitmap.getHeight());	
-		float density = getResources().getDisplayMetrics().density;
-		FileOutputStream fileOutputStream = null;
-
-		try {
-
-			Canvas resultImageCanvas = new Canvas(resultBitmap);
-			 Log.d(TAG, "Canvas w:" + resultImageCanvas.getWidth()+" h:" +resultImageCanvas.getHeight());	
-		 
-		     
+	  public Bitmap mergeBitmapWithProductImage (Bitmap backgroundImage){
+		  
+		  Canvas resultImageCanvas = new Canvas(backgroundImage);
 		     if (isFrontCamera) {
-		       flipImage();
-		     }
-					 
+			       flipImage();
+			 }
+		     
 			BitmapDrawable drawable =(BitmapDrawable) productImageview.getDrawable();
-			Bitmap clannerToMergeBM = drawable.getBitmap().copy(Bitmap.Config.ARGB_8888,true);
+			Bitmap imageToMergeWithBG = drawable.getBitmap().copy(Bitmap.Config.ARGB_8888,true);
 			
 			int drawableWidth= drawable.getBounds().width();
 			int drawableHeight = drawable.getBounds().height();
 	
-			 Log.d(TAG, "Image w:" + clannerToMergeBM.getWidth()+" h:" +clannerToMergeBM.getHeight());	
+			 Log.d(TAG, "Image w:" + imageToMergeWithBG.getWidth()+" h:" +imageToMergeWithBG.getHeight());	
 			 Log.d(TAG, "Drawable w:" + drawableWidth +" h:" + drawableHeight);	
 			 Log.d(TAG, "Preview left:" + mPreview.getLeft()+" width:" +mPreview.getWidth() +"height:" +mPreview.getHeight());	
 			 Log.d(TAG, "Product left:"+productImageview.getLeft()+" product w ="+productImageview.getWidth() +"product top " + productImageview.getTop()+"Product h :"+productImageview.getHeight());
 			 Log.d(TAG, "Product height:"+ productImageview.getLayoutParams().height);
+		
 			float clannerPosX = 0;
 			float clannerPosY = 0;
 			float newWidth =0;
-			float newHeight = 0;
-			  
-			 // Future versions 
- 			clannerPosX = transformValue(productImageview.getLeft(),mPreview.getWidth(),resultBitmap.getWidth());
-			clannerPosY = transformValue(productImageview.getTop(),mPreview.getHeight(),resultBitmap.getHeight());
+			float newHeight =0;
+	
+			clannerPosX = transformValue(productImageview.getLeft(),mPreview.getWidth(),backgroundImage.getWidth());
+			clannerPosY = transformValue(productImageview.getTop(),mPreview.getHeight(),backgroundImage.getHeight());
 			Point productCorner = productImageOriginCorner(productImageview.getWidth(), productImageview.getHeight(), productImageview.getWidth()*scaleFactor, productImageview.getHeight()*scaleFactor);
-
-		
-		
-			newWidth =	transformValue(drawableWidth, mPreview.getWidth(),resultBitmap.getWidth());
-			newHeight = transformValue(drawableHeight,mPreview.getHeight(),resultBitmap.getHeight());
+			newWidth =	transformValue(drawableWidth, mPreview.getWidth(),backgroundImage.getWidth());
+			newHeight = transformValue(drawableHeight,mPreview.getHeight(),backgroundImage.getHeight());
 			 
 			newWidth*=scaleFactor;
 			newHeight*=scaleFactor;
@@ -450,29 +444,49 @@ public class CameraActivity extends Activity {
 			 
 				if (scaleFactor < 1){
 					
-					clannerPosY =transformValue(yTranslation+productImageview.getTop()+productCorner.y,mPreview.getHeight(),resultBitmap.getHeight());
+					clannerPosY =transformValue(yTranslation+productImageview.getTop()+productCorner.y,mPreview.getHeight(),backgroundImage.getHeight());
 				}else
-				clannerPosY =transformValue(yTranslation+productImageview.getTop(),mPreview.getHeight(),resultBitmap.getHeight());
+				clannerPosY =transformValue(yTranslation+productImageview.getTop(),mPreview.getHeight(),backgroundImage.getHeight());
 			//transformValue(yTranslation+productImageview.getTop(),productImageview.getTop(),productImageview.getHeight(), mPreview.getTop(), mPreview.getHeight());
 					
 			}
 			if (scaleFactor < 1)
 			{
-				clannerPosX+= transformValue(productCorner.x, mPreview.getWidth(),resultBitmap.getWidth());
-				clannerPosY +=transformValue(productCorner.y,mPreview.getHeight(),resultBitmap.getHeight());
+				clannerPosX+= transformValue(productCorner.x, mPreview.getWidth(),backgroundImage.getWidth());
+				clannerPosY +=transformValue(productCorner.y,mPreview.getHeight(),backgroundImage.getHeight());
 			}
 		
 			
 			Log.i(TAG, " A: X pos:"+clannerPosX+"  Y "+ clannerPosY+" heigth " +newHeight+" width"+ newWidth );
-			Bitmap bm =getResizedBitmap(clannerToMergeBM, (int)newHeight,(int) newWidth);
-			clannerToMergeBM.recycle();
+			Bitmap bm =getResizedBitmap(imageToMergeWithBG, (int)newHeight,(int) newWidth);
+			imageToMergeWithBG.recycle();
 	
 			
 			resultImageCanvas.drawBitmap(bm, clannerPosX,clannerPosY, null);
-			showPreview(resultBitmap);
-			
-			pictureFile = getAlbumStorageDir("ecatalog");
+			return backgroundImage;
+	  }
+	  
+	/**
+	 * StoreByteImage 
+	 * @param 	mContext activity context
+	 * @param imageData Bytes containing a image
+	 **/	
+	public boolean processByteImage(Context mContext, byte[] imageData,
+			int quality) {
+	
+	
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		// avoid outofmemoryexception
+		options.inTempStorage = new byte[16 * 1024];
+		Bitmap resultBitmap = BitmapFactory.decodeByteArray(imageData, 0,
+				imageData.length, options);
+		resultBitmap = resultBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
+		Bitmap finalImage=	this.mergeBitmapWithProductImage(resultBitmap);
+	
+		FileOutputStream fileOutputStream = null;
+		try {
+			pictureFile = getAlbumStorageDir("ecatalog");
 		   File picture = new File(pictureFile.getAbsolutePath() 
 					+"/"+ System.currentTimeMillis() + ".jpg");
 			fileOutputStream = new FileOutputStream(picture);
@@ -480,7 +494,7 @@ public class CameraActivity extends Activity {
 			BufferedOutputStream bos = new BufferedOutputStream(
 					fileOutputStream);
 
-			resultBitmap.compress(CompressFormat.JPEG, 90, bos);
+			finalImage.compress(CompressFormat.JPEG, 90, bos);
 
 			bos.flush();
 			bos.close();
@@ -496,9 +510,19 @@ public class CameraActivity extends Activity {
 		}
 
 		saveMediaEntry(pictureFile.getAbsolutePath());
-
+		showPreview(finalImage);
 		return true;
 	}
+	
+	
+	/**
+	 *	This method computes the distance in X,Y between the top-left corner of a rectangle inside a container. For the container also the top-left corner is used.
+	 *	both with the same center
+	 *@param canvasW width container rect
+	 *@param canvasH height container rect
+	 *@param productW  width of the inner rect
+	 *@param productH Height of the inner rect
+	 */
 	
 	public Point productImageOriginCorner(float canvasW, float canvasH, float productW, float productH){
 		float x = (canvasW*0.5f)-(productW*0.5f) ;
@@ -511,9 +535,12 @@ public class CameraActivity extends Activity {
 		
 		cameraImageLayout.setVisibility(View.VISIBLE);
 	    mToolbarLayout.setVisibility(View.VISIBLE);
+	    mSizerBar.setVisibility(View.VISIBLE);
 	    findViewById(R.id.resultImageLayout).setVisibility(View.GONE);
 		findViewById(R.id.cameraProgressBar).setVisibility(View.GONE);
 		findViewById(R.id.galleryProgressBar).setVisibility(View.GONE);
+		isFrontCamera=!isFrontCamera;
+		this.flipCamera();
 
 	}
 
@@ -522,6 +549,7 @@ public class CameraActivity extends Activity {
 		// Show image to user
 		cameraImageLayout.setVisibility(View.GONE);
 	    mToolbarLayout.setVisibility(View.GONE);
+	    mSizerBar.setVisibility(View.GONE);
 	    findViewById(R.id.resultImageLayout).setVisibility(View.VISIBLE);
 		findViewById(R.id.cameraProgressBar).setVisibility(View.INVISIBLE);
 		findViewById(R.id.galleryProgressBar).setVisibility(View.INVISIBLE);
@@ -531,10 +559,9 @@ public class CameraActivity extends Activity {
 	}
 
 	public File getAlbumStorageDir(String albumName) {
-		 	
 	
-		String extStorageDirectory = Environment.getExternalStorageDirectory().toString()+"/"+albumName;
-			File file = new File(extStorageDirectory);
+		String extStorageDirectory = Environment.getExternalStorageDirectory()+"/"+albumName;
+			File file = new File(Environment.getExternalStorageDirectory()+"/"+albumName);
 	        if (!file.mkdirs()) {
 	            Log.e(TAG, "Directory not created");
 	        }
@@ -542,7 +569,8 @@ public class CameraActivity extends Activity {
 	}
 	
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
-	    int width = bm.getWidth();
+	 
+		int width = bm.getWidth();
 	    int height = bm.getHeight();
 	    float scaleWidth =0;
 	    float scaleHeight =0;
@@ -551,9 +579,8 @@ public class CameraActivity extends Activity {
 	      scaleHeight = ((float) newHeight) / height;
 	    }else
 	    {	
-	        scaleWidth = ((float) width ) /newWidth ;
+	    	scaleWidth = ((float) width ) /newWidth ;
 		    scaleHeight = ((float)height ) / newHeight;
-	    	
 	    }
 	    // CREATE A MATRIX FOR THE MANIPULATION
 	    Matrix m = productImageview.getImageMatrix();
@@ -578,9 +605,7 @@ public class CameraActivity extends Activity {
 	}
 	/**
 	 * Copies the image to the device's gallery
-	 * 
 	 * @param imagePath Route to store the image
-	 *   
 	 * @return The path on the where the image has been created
 	 */
 	private	Uri saveMediaEntry(String imagePath) {
@@ -594,8 +619,8 @@ public class CameraActivity extends Activity {
 
 		File f = new File(imagePath);
 		File parent = f.getParentFile();
-		String path = parent.toString().toLowerCase();
-		String name = parent.getName().toLowerCase();
+		String path = parent.toString().toLowerCase(Locale.getDefault());
+		String name = parent.getName().toLowerCase(Locale.getDefault());
 		v.put(Images.ImageColumns.BUCKET_ID, path.hashCode());
 		v.put(Images.ImageColumns.BUCKET_DISPLAY_NAME, name);
 		v.put(Images.Media.SIZE, f.length());
@@ -634,15 +659,14 @@ public class CameraActivity extends Activity {
 	}
 
 	/**
-	 * Based on Android documentation:
-	 * 
+	 * Based on Android documentation
 	 * A basic Camera preview class
 	 */
 	public class CameraPreview extends SurfaceView implements
 			SurfaceHolder.Callback {
 		private SurfaceHolder mHolder;
 		private Camera mCamera;
-
+	
 		public CameraPreview(Context context, Camera camera) {
 			super(context);
 			mCamera = camera;
@@ -744,9 +768,9 @@ public class CameraActivity extends Activity {
  
 		return params;
 	}
-	/**
+	/*
 	 * Aspect Ratio adjustment for the preview surface
-	 * */
+	 * 
 	private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
 		final double ASPECT_TOLERANCE = 0.05;
 		double targetRatio = (double) w / h;
@@ -782,53 +806,5 @@ public class CameraActivity extends Activity {
 		}
 		return optimalSize;
 	}
-
-	protected class myDragEventListener implements OnDragListener {
-
-		@Override
-		public boolean onDrag(View v, DragEvent event) {
-			   switch(event.getAction())                   
-		         {
-		           
-			// TODO Auto-generated method stub
-		  case DragEvent.ACTION_DRAG_STARTED:
-              layoutParams = (RelativeLayout.LayoutParams) 
-              v.getLayoutParams();
-              Log.d(TAG, "Action is DragEvent.ACTION_DRAG_STARTED");
-              // Do nothing
-              break;
-           case DragEvent.ACTION_DRAG_ENTERED:
-              Log.d(TAG, "Action is DragEvent.ACTION_DRAG_ENTERED");
-              int x_cord = (int) event.getX();
-              int y_cord = (int) event.getY();  
-              break;
-           case DragEvent.ACTION_DRAG_EXITED :
-              Log.d(TAG, "Action is DragEvent.ACTION_DRAG_EXITED");
-              x_cord = (int) event.getX();
-              y_cord = (int) event.getY();
-              layoutParams.leftMargin = x_cord;
-              layoutParams.topMargin = y_cord;
-              v.setLayoutParams(layoutParams);
-              break;
-           case DragEvent.ACTION_DRAG_LOCATION  :
-              Log.d(TAG, "Action is DragEvent.ACTION_DRAG_LOCATION");
-              x_cord = (int) event.getX();
-              y_cord = (int) event.getY();
-              break;
-           case DragEvent.ACTION_DRAG_ENDED   :
-              Log.d(TAG, "Action is DragEvent.ACTION_DRAG_ENDED");
-              // Do nothing
-              break;
-           case DragEvent.ACTION_DROP:
-              Log.d(TAG, "ACTION_DROP event");
-              // Do nothing
-              break;
-           default: break;
-           }
-           return true;
-
-		};
-	}//
-
-	
+	*/
 }
