@@ -38,4 +38,5 @@ type in the terminal the following command:
 'adb install Ecatalog.apk'
 
 ###Applause instalation
-Send an email to the repository admistrator in order to be included in the testers list. Try click on the last published build. [version 1.0](https://aph.applause.com/activate_user?token=b2562c402f3443d4917d783a0243cb69)
+Send an email to the repository admistrator in order to be included in the testers list. If you want to be notified of new versions. 
+[Download version 1.0](https://aph.applause.com/activate_user?token=b2562c402f3443d4917d783a0243cb69)
