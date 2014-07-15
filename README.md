@@ -6,19 +6,20 @@ The main idea behind is to provide the user with a preview of a given product pl
 
 Instalation Requirements:
 =========================
--Android 17 or above
-
--Android NDK
-
+-Android 17 or above (Device)
+-Android SDK 17
+-Android NDK 
 -OpenCV source code must available in the same working path. 
 
 
-Recomended steps for installing the project. 
+Steps for installing the project. 
 ===========================================
-1.Install [OpenCV SDK for Android](http://docs.opencv.org/doc/tutorials/introduction/android_binary_package/O4A_SDK.html)
+1. Go to the folder _pdf-doc/_ and follow the tutorials for your operating system.
+ 
+1.b Alternatively, you could also follow the offical documentation: Install [OpenCV SDK for Android](http://docs.opencv.org/doc/tutorials/introduction/android_binary_package/O4A_SDK.html)
 
-2.Download the zip File for Ecatalog App. Or clone it using Git
+2. Download the zip File for Ecatalog App. Or clone it using Git
 
-3.Run the application !
+3. Run the application !
 
 * See also the code documentation in the folder doc/ and Ecatalog User manual PDF. 
