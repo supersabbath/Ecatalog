@@ -8,3 +8,5 @@
     android:stretchMode="columnWidth"
     android:background="#000000"> 
 </GridView>
+
+<!-- Not used on version 1.0 -->

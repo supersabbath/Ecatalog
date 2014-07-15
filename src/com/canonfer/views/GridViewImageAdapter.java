@@ -64,11 +64,12 @@ import com.canonfer.ecatalog.imageProcessing.DownloadImageTask;
 		public void removeItem(LauncherIcon launcherIcon)
 		{
 			//icons.remove(position);
-			mddBB.deleteItem(launcherIcon.imgId);
+			
 			int i =icons.indexOf(launcherIcon);
 			icons.remove(i);
 			GridViewActivity activity=(GridViewActivity)mContext;
 			this.notifyDataSetChanged();
+			mddBB.deleteItem(launcherIcon.imgId);
 		}
 		/**
 		 * Public Class that encapsulates the grid's elements
