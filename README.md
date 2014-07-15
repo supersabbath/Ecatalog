@@ -23,3 +23,12 @@ Steps for installing the project.
 3. Run the application !
 
 * See also the code documentation in the folder doc/ and Ecatalog User manual PDF. 
+
+
+APK installation
+================
+In you don't want to setup the development evironment. Go to the  bin/ directory. 
+install using adb tool:
+
+type in the terminal the following command:
+'adb install Ecatalog.apk'
