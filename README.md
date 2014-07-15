@@ -17,26 +17,30 @@ Instalation Requirements:
 
 Steps for installing from the source code. 
 ===========================================
-1.a Go to the folder _pdf-doc/_ and follow the tutorials for your operating system.
+1.a Go to the folder **pdf-doc/** and follow the tutorials for your operating system. **Recomended**
  
 1.b Alternatively, you could also follow the offical documentation: Install [OpenCV SDK for Android](http://docs.opencv.org/doc/tutorials/introduction/android_binary_package/O4A_SDK.html)
 
-2. Download the zip File for Ecatalog App. Or clone it using Git
+2 Download the zip File for Ecatalog App. Or clone it using Git
 
-3. Run the application !
+3 Run the application !
 
-* See also the code documentation in the folder doc/ and Ecatalog User manual PDF. 
+* See also the code documentation in the folder **doc/** and Ecatalog User manual PDF. 
 
 
 APK installation
 ================
-###Terminal instalation:
+###Direct download from Applause test server:
+[Download version 1.0](https://aph.applause.com/activate_user?token=b2562c402f3443d4917d783a0243cb69). 
+
+If you want to be notified of new versions send an email to the repository admistrator in order to be included in the testers list. 
+
+
+###Terminal instalation using ADB:
 In you don't want to setup the development evironment. Go to the  bin/ directory. 
-install using adb tool, requires android tools to be installed:
+install using adb tool, requires android developer tools to be installed:
 
 type in the terminal the following command:
-'adb install Ecatalog.apk'
 
-###Applause instalation
-Send an email to the repository admistrator in order to be included in the testers list. If you want to be notified of new versions. 
-[Download version 1.0](https://aph.applause.com/activate_user?token=b2562c402f3443d4917d783a0243cb69)
+_adb install Ecatalog.apk_
+
