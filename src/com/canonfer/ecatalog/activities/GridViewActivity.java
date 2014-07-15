@@ -5,15 +5,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-
 import com.canonfer.clipboard.ClipboardListener;
 import com.canonfer.clipboard.DBHelper;
 import com.canonfer.clipboard.StoredImage;
-import com.canonfer.ecatalog.MainActivity;
 import com.canonfer.ecatalog.R;
 import com.canonfer.ecatalog.imageProcessing.AsyncResponse;
 import com.canonfer.ecatalog.imageProcessing.DownloadImageTask;
@@ -23,7 +20,6 @@ import com.canonfer.views.ExpandableHeightGridView;
 import com.canonfer.views.GridViewImageAdapter;
 import com.canonfer.views.GridViewImageAdapter.ViewHolder;
 import com.canonfer.views.LauncherIcon;
-
 import android.app.Activity;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -50,6 +46,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -76,6 +73,7 @@ public class GridViewActivity extends Activity implements OnItemClickListener, A
 	ImageView mSelected;
 	public ExpandableHeightGridView  mGridView ;
 	ScrollView mGridScroll;
+	ProgressBar mSpinner;
 	
 	 final LauncherIcon[] ICONS = {
 		new LauncherIcon(R.drawable.apple, "Metro", "metro.png",false),
@@ -93,6 +91,7 @@ public class GridViewActivity extends Activity implements OnItemClickListener, A
 		setContentView(R.layout.grid_view_activity);
 		mIcons = new ArrayList();
 		createDataBase();
+		
 		mGridView = (ExpandableHeightGridView) findViewById(R.id.dashboard_grid);
 		mGridView.setExpanded(true);
 		mGridView.setAdapter(new GridViewImageAdapter(this, mDB));
@@ -107,6 +106,7 @@ public class GridViewActivity extends Activity implements OnItemClickListener, A
 		});
 		
 		mGridScroll = (ScrollView)findViewById(R.id.grid_scroll);
+		mSpinner = (ProgressBar)findViewById(R.id.gridSpinner);
 		this.startClipBoardManager();
 	}
 /**
@@ -190,12 +190,9 @@ public class GridViewActivity extends Activity implements OnItemClickListener, A
 
 		}
 		return super.onOptionsItemSelected(item);
-
 	}
 	/**
-	 * 
 	 * Open CV initializer  Callback
-	 * 
 	 * */
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 		@Override
@@ -219,7 +216,7 @@ public class GridViewActivity extends Activity implements OnItemClickListener, A
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
+		mSpinner.setVisibility(View.VISIBLE);
 		mSelected=(ImageView) v.findViewById(R.id.dashboard_icon_img);
 		Bitmap image = ((BitmapDrawable)mSelected.getDrawable()).getBitmap();
 		ImageProcessorTask procesor=new ImageProcessorTask();
@@ -241,6 +238,7 @@ public class GridViewActivity extends Activity implements OnItemClickListener, A
 		gridView.invalidate();
     	intent.putExtra("byteArray", bs.toByteArray());
     	startActivityForResult(intent, CAMERA_RESULT);
+    	
 	}
 
 
@@ -248,11 +246,7 @@ public class GridViewActivity extends Activity implements OnItemClickListener, A
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	  super.onActivityResult(requestCode, resultCode, data);
 	  
-	  if (resultCode == CAMERA_RESULT) {
-		  
-    	 
-      }
-
+	  mSpinner.setVisibility(View.INVISIBLE);
 	}
     /**
      * Converts Bitmap to bytes. Static method.

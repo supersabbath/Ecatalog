@@ -65,7 +65,7 @@ containing a value of this type.
         public static final int back=0x7f040001;
         public static final int cameraImageLayout=0x7f040009;
         public static final int cameraProgressBar=0x7f040010;
-        public static final int dashboard_grid=0x7f040019;
+        public static final int dashboard_grid=0x7f04001a;
         public static final int dashboard_icon_img=0x7f040015;
         public static final int dashboard_icon_text=0x7f040017;
         public static final int dummy_button=0x7f040007;
@@ -76,10 +76,11 @@ containing a value of this type.
         public static final int fullscreen_content_controls=0x7f040006;
         public static final int gallery1=0x7f040008;
         public static final int galleryProgressBar=0x7f040013;
-        public static final int grid_scroll=0x7f040018;
+        public static final int gridSpinner=0x7f040018;
+        public static final int grid_scroll=0x7f040019;
         public static final int grid_view=0x7f040003;
         public static final int imageView1=0x7f040005;
-        public static final int open=0x7f04001a;
+        public static final int open=0x7f04001b;
         public static final int productImageView=0x7f04000b;
         public static final int resultImageLayout=0x7f040011;
         public static final int resultImageView=0x7f040012;

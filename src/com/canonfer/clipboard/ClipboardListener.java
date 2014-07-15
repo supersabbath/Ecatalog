@@ -26,7 +26,7 @@ import android.content.ContentResolver;
  * The copied data will store if it is a url for an image. Or if it responds to the mime type /image
  * When new valid data is added to the database it will display a Notification to the user in the toolbar
  * */
-@SuppressLint("NewApi")
+
 public class ClipboardListener implements
 		ClipboardManager.OnPrimaryClipChangedListener {
 
@@ -78,7 +78,7 @@ public class ClipboardListener implements
 	@SuppressLint("NewApi")
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	/**
-	 * Presents a
+	 * Presents a notification in the notification Area when an image is clipped
 	 */
 	public void pushNotification(){
 		
@@ -113,12 +113,12 @@ public class ClipboardListener implements
 		mNotificationManager.notify(1, mBuilder.build());
 		
 	}
+	
 	public boolean validateText(ClipData.Item item) {
 
 		CharSequence pasteData = item.getText();
 		// If the string contains data, then the paste operation is done
 		if (pasteData != null) {
-		
 				String urlString =pasteData.toString();
 				if (matchURL(urlString)){
 					ImageValidator validator = new ImageValidator();
@@ -127,7 +127,6 @@ public class ClipboardListener implements
 				}else{
 					return false;
 				}
-
 			// The clipboard does not contain text. If it contains a URI,
 			// attempts to get data from it
 		} else {

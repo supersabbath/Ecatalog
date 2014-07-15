@@ -1,1 +1,7 @@
+com.canonfer.clipboard
+com.canonfer.ecatalog
 com.canonfer.ecatalog.activities
+com.canonfer.ecatalog.imageProcessing
+com.canonfer.ecatalog.util
+com.canonfer.views
+org.opencv

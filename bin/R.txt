@@ -18,7 +18,7 @@ int id any 0x7f040000
 int id back 0x7f040001
 int id cameraImageLayout 0x7f040009
 int id cameraProgressBar 0x7f040010
-int id dashboard_grid 0x7f040019
+int id dashboard_grid 0x7f04001a
 int id dashboard_icon_img 0x7f040015
 int id dashboard_icon_text 0x7f040017
 int id dummy_button 0x7f040007
@@ -29,10 +29,11 @@ int id fullscreen_content 0x7f040004
 int id fullscreen_content_controls 0x7f040006
 int id gallery1 0x7f040008
 int id galleryProgressBar 0x7f040013
-int id grid_scroll 0x7f040018
+int id gridSpinner 0x7f040018
+int id grid_scroll 0x7f040019
 int id grid_view 0x7f040003
 int id imageView1 0x7f040005
-int id open 0x7f04001a
+int id open 0x7f04001b
 int id productImageView 0x7f04000b
 int id resultImageLayout 0x7f040011
 int id resultImageView 0x7f040012
