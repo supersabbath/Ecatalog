@@ -6,13 +6,13 @@ The main idea behind is to provide the user with a preview of a given product pl
 
 Instalation Requirements:
 =========================
--Android 17 or above (Device)
--Android SDK 17
--Android NDK 
--OpenCV source code must available in the same working path. 
++Android 17 or above (Device)
++Android SDK 17
++Android NDK 
++OpenCV source code must available in the same working path. This version of the app uses openCV 2.4.8
 
 
-Steps for installing the project. 
+Steps for installing from the source code. 
 ===========================================
 1. Go to the folder _pdf-doc/_ and follow the tutorials for your operating system.
  
